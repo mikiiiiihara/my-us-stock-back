@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+generator nestgraphql {
+  provider = "node node_modules/prisma-nestjs-graphql"
+  output = "../src/@generated/prisma-nestjs-graphql"
+  fields_Validator_from = "class-validator"
+  fields_Validator_input = true
+  decorate_1_type        = "CreateOne*Args"
+  decorate_1_field       = data
+  decorate_1_name        = ValidateNested
+  decorate_1_from        = "class-validator"
+  decorate_1_arguments   = "[]"
+  decorate_2_type        = "CreateOne*Args"
+  decorate_2_field       = data
+  decorate_2_from        = "class-transformer"
+  decorate_2_arguments   = "['() => {propertyType.0}']"
+  decorate_2_name        = Type
+}
+model User {
+  /// @Field(() => ID)
+  id          Int       @id @default(autoincrement())
+  /// @Validator.@IsEmail()
+  email       String    @unique
+  /// @Validator.IsNotEmpty()
+  name        String
+  /// @HideField()
+  /// @Validator.MinLength(8)
+  password    String
+  /// @HideField({ input: true, output: true })
+  hashedRefreshToken String?
+  /// @HideField({ input: true, output: true })
+  createdAt DateTime @default(now())
+  /// @HideField({ input: true, output: true })
+  updatedAt DateTime @updatedAt
+}
+
+
+model Asset {
+  id      Int    @id @default(autoincrement())
+  asset   Float
+  year    String
+  month   String
+  date    String
+  addDate String
+  updDate String
+  cashUSD Float
+  cashJPY Int
+  cashBTC Float
+  cashETH Float
+  cashRIPPLE Float
+  cashBAT Float
+  cashLTC Float
+  total Float
+  userId Int
+}
+
+model Strategy {
+  id      Int    @id @default(autoincrement())
+  text    String
+  addDate String
+  updDate String
+  userId Int
+}
+
+model Ticker {
+  id                Int    @id @default(autoincrement())
+  ticker            String
+  getPrice          Float
+  quantity          Int
+  dividend          Float
+  dividendTime      Int
+  dividendFirstTime Int
+  sector            String
+  usdjpy            Float
+  userId Int
+}
